@@ -1,7 +1,7 @@
 """
 Student No.: C1769331
 """
-
+from tqdm import tqdm
 
 def generateDictionary(docs):
     dictionary = []
@@ -13,13 +13,10 @@ def generateDictionary(docs):
 
 
 def generateInvertedIndex(dictionary, corpus):
-    """
-    NEEDS TO BE REWRITTEN TO BE *MUCH* MORE EFFICENT
-    """
     index = {}
     for word in dictionary:
         index[word] = []
-    for doc in corpus:
+    for doc in tqdm(corpus):
         for word in doc[0].split():
             # print(word)
             if word in index and doc[1] not in index[word]:
@@ -33,7 +30,7 @@ def main():
     queries = []
 
     # Load the corpus
-    with open("./corpus/set1/docs.txt") as fp:
+    with open("./corpus/set2/docs.txt") as fp:
         docs = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Load the queries
