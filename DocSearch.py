@@ -1,7 +1,7 @@
 """
 Student No.: C1769331
 """
-from tqdm import tqdm
+
 
 def generateDictionary(docs):
     dictionary = []
@@ -16,9 +16,8 @@ def generateInvertedIndex(dictionary, corpus):
     index = {}
     for word in dictionary:
         index[word] = []
-    for doc in tqdm(corpus):
+    for doc in corpus:
         for word in doc[0].split():
-            # print(word)
             if word in index and doc[1] not in index[word]:
                 index[word].append(doc[1])
     return index
@@ -34,15 +33,22 @@ def main():
         docs = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Load the queries
-    with open("./corpus/set1/queries.txt") as fp:
+    with open("./corpus/set2/queries.txt") as fp:
         queries = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     dictionary = generateDictionary(docs)
     invertedIndex = generateInvertedIndex(dictionary, docs)
-    print(docs)
-    print(queries)
-    print(dictionary)
-    print(invertedIndex)
+
+    print("Words in dictionary:", len(dictionary))
+
+    for query in queries:
+        print("Query:", query[0])
+        word_documents = []
+        for word in query[0].split():
+            if word in invertedIndex:
+                word_documents.append(set(invertedIndex[word]))
+        related = set.intersection(*word_documents)
+        print("Related:", " ".join(str(x) for x in set(related)))
 
 
 if __name__ == "__main__":
