@@ -52,7 +52,7 @@ def main():
                 word_documents.append(set(invertedIndex[word]))
         # Calculate the intersection
         related = set.intersection(*word_documents)
-        print("Related:", " ".join(str(x) for x in set(related)))
+        print("Related:", " ".join(str(x) for x in related))
 
 
 if __name__ == "__main__":
