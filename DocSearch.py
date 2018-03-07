@@ -41,12 +41,16 @@ def main():
 
     print("Words in dictionary:", len(dictionary))
 
+    # Iterate through queries
     for query in queries:
         print("Query:", query[0])
         word_documents = []
+        # Iterate through each word in the query
         for word in query[0].split():
             if word in invertedIndex:
+                # Convert the array to a set so an intersection can be found
                 word_documents.append(set(invertedIndex[word]))
+        # Calculate the intersection
         related = set.intersection(*word_documents)
         print("Related:", " ".join(str(x) for x in set(related)))
 
