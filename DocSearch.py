@@ -1,6 +1,7 @@
 """
 Student No.: C1769331
 """
+import numpy as np
 import math
 
 def generateDictionary(docs):
@@ -33,7 +34,11 @@ def calculateAngle(doc1, doc2, dictionary):
         doc1_vector[i] = doc1.count(word)
     for i, word in enumerate(dictionary):
         doc2_vector[i] = doc2.count(word)
-    return
+    dotproduct = np.dot(doc1_vector, doc2_vector)
+    doc1_length = math.sqrt(np.dot(doc1_vector, doc1_vector))
+    doc2_length = math.sqrt(np.dot(doc2_vector, doc2_vector))
+    angle = math.degrees(math.acos(dotproduct/(doc1_length * doc2_length)))
+    return angle
 
 
 
@@ -68,9 +73,13 @@ def main():
         # Calculate the intersection
         related = set.intersection(*word_documents)
         print("Relevant documents:", " ".join(str(x) for x in related))
+        angles = []
         for document in docs:
             if document[1] in related:
-                calculateAngle(document[0], query[0], dictionary)
+                angles.append((document[1], calculateAngle(document[0], query[0], dictionary)))
+        sorted_angles = sorted(angles, key=lambda x: x[1])
+        for angle in sorted_angles:
+            print(angle[0], '{:.2f}'.format(round(angle[1], 2)))
 
 if __name__ == "__main__":
     main()
