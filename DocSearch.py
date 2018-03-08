@@ -4,6 +4,7 @@ Student No.: C1769331
 import numpy as np
 import math
 
+
 def generateDictionary(docs):
     dictionary = []
     for doc in docs:
@@ -30,17 +31,17 @@ def calculateAngle(doc1, doc2, dictionary):
     # Create empty vectors
     doc1_vector = [0]*len(dictionary)
     doc2_vector = [0]*len(dictionary)
+    # Populate them
     for i, word in enumerate(dictionary):
         doc1_vector[i] = doc1.count(word)
     for i, word in enumerate(dictionary):
         doc2_vector[i] = doc2.count(word)
-    dotproduct = np.dot(doc1_vector, doc2_vector)
+    # Calculate the lengths of the vectors
     doc1_length = math.sqrt(np.dot(doc1_vector, doc1_vector))
     doc2_length = math.sqrt(np.dot(doc2_vector, doc2_vector))
-    angle = math.degrees(math.acos(dotproduct/(doc1_length * doc2_length)))
+    # And finally calculate the angles between them
+    angle = math.degrees(math.acos(np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
     return angle
-
-
 
 
 def main():
@@ -56,6 +57,7 @@ def main():
     with open("./corpus/set1/queries.txt") as fp:
         queries = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
+    # Generate the dictionary and inverted index
     dictionary = generateDictionary(docs)
     invertedIndex = generateInvertedIndex(dictionary, docs)
 
@@ -74,12 +76,17 @@ def main():
         related = set.intersection(*word_documents)
         print("Relevant documents:", " ".join(str(x) for x in related))
         angles = []
+        # Calculate the angles between the documents
+        # TODO: Optimise this
         for document in docs:
             if document[1] in related:
                 angles.append((document[1], calculateAngle(document[0], query[0], dictionary)))
+        # Order the angles
         sorted_angles = sorted(angles, key=lambda x: x[1])
+        # Print them to 2 ddecimal places keeping trailing 0s
         for angle in sorted_angles:
             print(angle[0], '{:.2f}'.format(round(angle[1], 2)))
+
 
 if __name__ == "__main__":
     main()
