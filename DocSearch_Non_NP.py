@@ -29,16 +29,16 @@ def calculateAngle(doc1, doc2, dictionary):
     # Split each document down into individual words
     doc1, doc2 = doc1.split(), doc2.split()
     # Create empty vectors
-    doc1_vector = np.zeros(len(dictionary), dtype=np.int32)
-    doc2_vector = np.zeros(len(dictionary), dtype=np.int32)
+    doc1_vector = [0]*len(dictionary)
+    doc2_vector = [0]*len(dictionary)
     # Populate them
     for i, word in enumerate(dictionary):
         doc1_vector[i] = doc1.count(word)
     for i, word in enumerate(dictionary):
         doc2_vector[i] = doc2.count(word)
     # Calculate the lengths of the vectors
-    doc1_length = np.sqrt(np.dot(doc1_vector, doc1_vector))
-    doc2_length = np.sqrt(np.dot(doc2_vector, doc2_vector))
+    doc1_length = math.sqrt(np.dot(doc1_vector, doc1_vector))
+    doc2_length = math.sqrt(np.dot(doc2_vector, doc2_vector))
     # And finally calculate the angles between them
     angle = math.degrees(math.acos(np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
     return angle
