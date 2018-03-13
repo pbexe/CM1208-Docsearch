@@ -28,19 +28,23 @@ def generateInvertedIndex(dictionary, corpus):
 def calculateAngle(doc1, doc2, dictionary):
     # Split each document down into individual words
     doc1, doc2 = doc1.split(), doc2.split()
+
     # Create empty vectors
     doc1_vector = np.zeros(len(dictionary), dtype=np.int32)
     doc2_vector = np.zeros(len(dictionary), dtype=np.int32)
+
     # Populate them
     for i, word in enumerate(dictionary):
         doc1_vector[i] = doc1.count(word)
     for i, word in enumerate(dictionary):
         doc2_vector[i] = doc2.count(word)
+
     # Calculate the lengths of the vectors
     doc1_length = np.sqrt(np.dot(doc1_vector, doc1_vector))
     doc2_length = np.sqrt(np.dot(doc2_vector, doc2_vector))
+
     # And finally calculate the angles between them
-    angle = math.degrees(math.acos(np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
+    angle = np.degrees(np.arccos(np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
     return angle
 
 
@@ -50,11 +54,11 @@ def main():
     queries = []
 
     # Load the corpus
-    with open("./corpus/set3/docs.txt") as fp:
+    with open("./corpus/set2/docs.txt") as fp:
         docs = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Load the queries
-    with open("./corpus/set3/queries.txt") as fp:
+    with open("./corpus/set2/queries.txt") as fp:
         queries = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Generate the dictionary and inverted index
@@ -72,9 +76,11 @@ def main():
             if word in invertedIndex:
                 # Convert the array to a set so an intersection can be found
                 word_documents.append(set(invertedIndex[word]))
+
         # Calculate the intersection
         related = set.intersection(*word_documents)
         print("Relevant documents:", " ".join(str(x) for x in related))
+
         angles = []
         # Calculate the angles between the documents
         # TODO: Optimise this
