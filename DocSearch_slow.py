@@ -1,20 +1,11 @@
 """
 Student No.: C1769331
 """
-import math
 import numpy as np
+import math
 
 
-def generate_dictionary(docs):
-    """Generates a dictionary of all of the words that occur in `docs`
-
-    Args:
-        docs (list): A list of the documents in the corpus
-
-    Returns:
-        list: A list of all of the words that occur in `docs`
-    """
-
+def generateDictionary(docs):
     dictionary = []
     for doc in docs:
         for word in doc[0].split():
@@ -23,18 +14,7 @@ def generate_dictionary(docs):
     return dictionary
 
 
-def generate_inverted_index(dictionary, corpus):
-    """Generates an inverted index of all of the words in `dictionary` that
-    occur in the corpus
-
-    Args:
-        dictionary (list): A dictionary of all words in the whole corpus
-        corpus (list): The text that the inverted index shall be generated from
-
-    Returns:
-        dict: A dictionary representing the inverted index
-    """
-
+def generateInvertedIndex(dictionary, corpus):
     index = {}
     for word in dictionary:
         index[word] = []
@@ -45,18 +25,7 @@ def generate_inverted_index(dictionary, corpus):
     return index
 
 
-def calculate_angle(doc1, doc2, dictionary):
-    """Calculates the angle between two documents
-
-    Args:
-        doc1 (list): The first document
-        doc2 (list): The second document
-        dictionary (list): A dictionary of all words in the whole corpus
-
-    Returns:
-        float: The angle between the two documents
-    """
-
+def calculateAngle(doc1, doc2, dictionary):
     # Split each document down into individual words
     doc1, doc2 = doc1.split(), doc2.split()
 
@@ -71,35 +40,32 @@ def calculate_angle(doc1, doc2, dictionary):
         doc2_vector[i] = doc2.count(word)
 
     # Calculate the lengths of the vectors
+    # doc1_length = np.sqrt(np.dot(doc1_vector, doc1_vector))
+    # doc2_length = np.sqrt(np.dot(doc2_vector, doc2_vector))
     doc1_length = np.linalg.norm(doc1_vector)
     doc2_length = np.linalg.norm(doc2_vector)
 
     # And finally calculate the angles between them
-    angle = np.degrees(
-        np.arccos(
-            np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
+    angle = np.degrees(np.arccos(np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
     return angle
 
 
 def main():
-    """The main procedure
-    """
-
     # Placeholders for data to be imported/generated
     docs = []
     queries = []
 
     # Load the corpus
-    with open("./corpus/set3/docs.txt") as fp:
+    with open("./corpus/set2/docs.txt") as fp:
         docs = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Load the queries
-    with open("./corpus/set3/queries.txt") as fp:
+    with open("./corpus/set2/queries.txt") as fp:
         queries = [x.strip('\n') for x in fp.readlines()]
 
     # Generate the dictionary and inverted index
-    dictionary = generate_dictionary(docs)
-    inverted_index = generate_inverted_index(dictionary, docs)
+    dictionary = generateDictionary(docs)
+    invertedIndex = generateInvertedIndex(dictionary, docs)
 
     print("Words in dictionary:", len(dictionary))
 
@@ -109,9 +75,9 @@ def main():
         word_documents = []
         # Iterate through each word in the query
         for word in query.split():
-            if word in inverted_index:
+            if word in invertedIndex:
                 # Convert the array to a set so an intersection can be found
-                word_documents.append(set(inverted_index[word]))
+                word_documents.append(set(invertedIndex[word]))
 
         # Calculate the intersection
         related = set.intersection(*word_documents)
@@ -119,13 +85,10 @@ def main():
 
         angles = []
         # Calculate the angles between the documents
+        # TODO: Optimise this
         for document in docs:
             if document[1] in related:
-                dictionary = generate_dictionary(
-                    [[document[0], None], [query, None]])
-                angles.append(
-                    (document[1], calculate_angle(
-                        document[0], query, dictionary)))
+                angles.append((document[1], calculateAngle(document[0], query, dictionary)))
         # Order the angles
         sorted_angles = sorted(angles, key=lambda x: x[1])
         # Print them to 2 ddecimal places keeping trailing 0s
