@@ -49,8 +49,8 @@ def calculate_angle(doc1, doc2, dictionary):
     """Calculates the angle between two documents
 
     Args:
-        doc1 (list): The first document
-        doc2 (list): The second document
+        doc1 (str): The first document
+        doc2 (str): The second document
         dictionary (list): A dictionary of all words in the whole corpus
 
     Returns:
