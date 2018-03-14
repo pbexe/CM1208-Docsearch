@@ -40,8 +40,10 @@ def calculateAngle(doc1, doc2, dictionary):
         doc2_vector[i] = doc2.count(word)
 
     # Calculate the lengths of the vectors
-    doc1_length = np.sqrt(np.dot(doc1_vector, doc1_vector))
-    doc2_length = np.sqrt(np.dot(doc2_vector, doc2_vector))
+    # doc1_length = np.sqrt(np.dot(doc1_vector, doc1_vector))
+    # doc2_length = np.sqrt(np.dot(doc2_vector, doc2_vector))
+    doc1_length = np.linalg.norm(doc1_vector)
+    doc2_length = np.linalg.norm(doc2_vector)
 
     # And finally calculate the angles between them
     angle = np.degrees(np.arccos(np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
@@ -59,7 +61,7 @@ def main():
 
     # Load the queries
     with open("./corpus/set2/queries.txt") as fp:
-        queries = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
+        queries = [x.strip('\n') for x in fp.readlines()]
 
     # Generate the dictionary and inverted index
     dictionary = generateDictionary(docs)
@@ -69,10 +71,10 @@ def main():
 
     # Iterate through queries
     for query in queries:
-        print("Query:", query[0])
+        print("Query:", query)
         word_documents = []
         # Iterate through each word in the query
-        for word in query[0].split():
+        for word in query.split():
             if word in invertedIndex:
                 # Convert the array to a set so an intersection can be found
                 word_documents.append(set(invertedIndex[word]))
@@ -86,7 +88,7 @@ def main():
         # TODO: Optimise this
         for document in docs:
             if document[1] in related:
-                angles.append((document[1], calculateAngle(document[0], query[0], dictionary)))
+                angles.append((document[1], calculateAngle(document[0], query, dictionary)))
         # Order the angles
         sorted_angles = sorted(angles, key=lambda x: x[1])
         # Print them to 2 ddecimal places keeping trailing 0s
