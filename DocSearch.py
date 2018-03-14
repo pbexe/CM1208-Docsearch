@@ -77,7 +77,9 @@ def calculate_angle(doc1, doc2, dictionary):
     # And finally calculate the angles between them
     angle = np.degrees(
         np.arccos(
-            np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)))
+            np.dot(doc1_vector, doc2_vector) / (doc1_length * doc2_length)
+        )
+    )
     return angle
 
 
@@ -122,11 +124,18 @@ def main():
         for document in docs:
             if document[1] in related:
                 dictionary = generate_dictionary(
-                    [[document[0], None], [query, None]])
+                    [
+                        [document[0], None],
+                        [query, None]
+                    ]
+                )
+                # Order the angles
                 angles.append(
-                    (document[1], calculate_angle(
-                        document[0], query, dictionary)))
-        # Order the angles
+                    (
+                     document[1],
+                     calculate_angle(document[0], query, dictionary)
+                    )
+                )
         sorted_angles = sorted(angles, key=lambda x: x[1])
         # Print them to 2 ddecimal places keeping trailing 0s
         for angle in sorted_angles:
