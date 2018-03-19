@@ -50,11 +50,11 @@ def main():
     queries = []
 
     # Load the corpus
-    with open("./corpus/set3/docs.txt") as fp:
+    with open("./corpus/set2/docs.txt") as fp:
         docs = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Load the queries
-    with open("./corpus/set3/queries.txt") as fp:
+    with open("./corpus/set2/queries.txt") as fp:
         queries = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Generate the dictionary and inverted index
