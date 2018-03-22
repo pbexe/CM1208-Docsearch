@@ -1,6 +1,7 @@
 """
 Student No.: C1769331
 """
+import sys
 import math
 import numpy as np
 
@@ -92,11 +93,11 @@ def main():
     queries = []
 
     # Load the corpus
-    with open("./corpus/set2/docs.txt") as fp:
+    with open(sys.argv[1]) as fp:
         docs = [(x.strip('\n'), i) for i, x in enumerate(fp.readlines(), 1)]
 
     # Load the queries
-    with open("./corpus/set2/queries.txt") as fp:
+    with open(sys.argv[2]) as fp:
         queries = [x.strip('\n') for x in fp.readlines()]
 
     # Generate the dictionary and inverted index
@@ -142,4 +143,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 3:
+        main()
+    else:
+        print("Please enter the document file and then the query file as arguments. eg:\n\tpython DocSearch.py ./corpus/set3/docs.txt ./corpus/set3/queries.txt")
